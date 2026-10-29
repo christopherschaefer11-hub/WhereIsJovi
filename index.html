@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Where is Jovi? — Interactive Preposition &amp; Following Directions SLP Scene</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-display: 'Fredoka', 'Inter', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, #f0f9ff 0%, #fefce8 100%);
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display {
+      font-family: var(--font-display);
+    }
+    @keyframes gentleBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    .bob-anim {
+      animation: gentleBob 2.4s ease-in-out infinite;
+    }
+    .zone-active-pulse {
+      animation: pulseRing 1.4s ease-in-out infinite;
+    }
+    .aac-tile {
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      user-select: none;
+    }
+    .aac-tile:active {
+      transform: scale(0.94);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-44">
+
+  <!-- Top Navigation & Status Header -->
+  <header class="sticky top-0 z-30 bg-slate-900 text-white shadow-lg border-b border-slate-700">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-sky-400 flex items-center justify-center shadow-inner text-slate-900 font-bold text-xl">
+          🧭
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">Where is Jovi?</h1>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+              Spatial Concepts &amp; Directions
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 hidden sm:block">
+            Prepositions, 1–3 Step Directions &amp; Expressive Barrier Games • Starring Jovi, Piggy &amp; Snoop
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex flex-wrap items-center gap-1.5 bg-slate-800 p-1 rounded-xl border border-slate-700" aria-label="Main Navigation">
+        <button id="tab-btn-scene" onclick="switchMainTab('scene')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-sky-400 text-slate-950 shadow">
+          🗺️ Interactive Scene
+        </button>
+        <button id="tab-btn-guide" onclick="switchMainTab('guide')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700">
+          📋 SLP Prep Guide
+        </button>
+        <button id="tab-btn-cards" onclick="switchMainTab('cards')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700">
+          🃏 Preposition Deck
+        </button>
+        <button id="tab-btn-data" onclick="switchMainTab('data')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700">
+          📊 SLP Session Data
+        </button>
+        <button id="tab-btn-github" onclick="switchMainTab('github')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700">
+          💻 GitHub &amp; Vibe Kit
+        </button>
+      </nav>
+
+      <!-- Utility Controls -->
+      <div class="flex items-center gap-2">
+        <div class="hidden md:flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
+          <span>🦴 Bones:</span>
+          <span id="header-bone-count" class="font-bold text-amber-400 text-sm">0</span>
+        </div>
+        <button id="btn-toggle-slp-drawer" onclick="toggleSlpDrawer()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow">
+          <span>👩‍🏫</span>
+          <span id="slp-drawer-label">SLP Prompts: ON</span>
+        </button>
+        <button id="btn-toggle-aac" onclick="toggleAacBar()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1.5 shadow">
+          <span>💬</span>
+          <span id="aac-bar-label">AAC Strip: ON</span>
+        </button>
+        <button id="btn-toggle-sound" onclick="toggleSound()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs" title="Toggle Sound &amp; Voice">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Banner -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 hidden">
+    <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-sky-400/50 flex items-center gap-3 max-w-sm">
+      <span id="toast-emoji" class="text-xl">🐾</span>
+      <p id="toast-text" class="text-xs sm:text-sm font-medium"></p>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-5">
+
+    <!-- ==========================================
+         TAB 1: INTERACTIVE SPATIAL SCENE & DIRECTIONS
+         ========================================== -->
+    <section id="view-scene" class="space-y-4">
+
+      <!-- Top Control Bar: 4 Omaha Settings + 3 Clinical Game Modes -->
+      <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <!-- Setting Selector -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-1">Setting:</span>
+          <button id="setting-btn-yard" onclick="selectSetting('yard')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-amber-300 shadow">
+            🌳 Field Club Yard
+          </button>
+          <button id="setting-btn-living" onclick="selectSetting('living')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+            🛋️ Living Room
+          </button>
+          <button id="setting-btn-kitchen" onclick="selectSetting('kitchen')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+            🍳 Chef Kitchen
+          </button>
+          <button id="setting-btn-school" onclick="selectSetting('school')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+            🏫 Speech Room
+          </button>
+        </div>
+
+        <!-- Activity Mode Selector -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <button id="mode-btn-directions" onclick="selectPlayMode('directions')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-sky-600 text-white shadow">
+            🎯 Follow Directions
+          </button>
+          <button id="mode-btn-mystery" onclick="selectPlayMode('mystery')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-700 hover:bg-white">
+            🕵️ Hide &amp; Seek Piggy
+          </button>
+          <button id="mode-btn-free" onclick="selectPlayMode('free')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-700 hover:bg-white">
+            🎨 Free Barrier Scene
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Grid: Interactive Scene Stage (Left 8 cols) + SLP Clinician Drawer (Right 4 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- Left/Center Column -->
+        <div id="scene-main-col" class="lg:col-span-8 space-y-4">
+
+          <!-- Dynamic Prompt & Complexity Banner -->
+          <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-md border border-slate-200 space-y-3">
+            <!-- Mode Header Controls -->
+            <div id="directions-controls-row" class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-bold uppercase text-slate-500 mr-1">Complexity:</span>
+                <button id="tier-btn-1" onclick="setDirectionTier(1)" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-600 text-white">
+                  1-Step (Basic Preposition)
+                </button>
+                <button id="tier-btn-2" onclick="setDirectionTier(2)" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                  2-Step (First / Then)
+                </button>
+                <button id="tier-btn-3" onclick="setDirectionTier(3)" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                  3-Step / Before &amp; After
+                </button>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button id="btn-speak-prompt" onclick="speakCurrentPrompt()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 transition">
+                  🗣️ Speak Prompt
+                </button>
+                <button id="btn-new-prompt" onclick="generateNewDirection()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-amber-300 transition">
+                  🎲 New Direction
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Prompt Callout Card -->
+            <div class="bg-gradient-to-r from-sky-50 to-indigo-50 border-l-4 border-sky-500 p-3.5 rounded-r-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span id="prompt-mode-badge" class="text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-sky-600 text-white">
+                    1-Step Direction
+                  </span>
+                  <span id="step-progress-pill" class="text-xs font-bold text-sky-900">
+                    Select an item below, then click its target spot!
+                  </span>
+                </div>
+                <p id="active-prompt-text" class="text-base sm:text-lg font-bold text-slate-900 leading-snug"></p>
+              </div>
+              <button id="btn-clear-scene" onclick="clearAllPlacedItems()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 shrink-0">
+                🔄 Clear Scene
+              </button>
+            </div>
+
+            <!-- Movable Character & Object Tray (Tap or Drag!) -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  🐾 Step 1: Select Who or What to Move (Currently Selected: <strong id="selected-token-name" class="text-sky-700">🐕‍🦺 Jovi</strong>)
+                </span>
+                <span class="text-[11px] text-slate-500 hidden sm:inline">
+                  Tip: Tap any character below, then tap a glowing spot in the scene!
+                </span>
+              </div>
+              <div id="token-tray-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-1.5"></div>
+            </div>
+
+            <!-- Interactive SVG Spatial Stage -->
+            <div class="relative rounded-2xl overflow-hidden border-2 border-slate-300 bg-white shadow-inner">
+              <div id="spatial-svg-container" class="w-full"></div>
+            </div>
+
+            <!-- Expressive Sentence Strip & Feedback Bar Under Stage -->
+            <div class="bg-slate-900 text-white p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl" id="feedback-icon">🐕‍🦺</span>
+                <div>
+                  <span class="text-[11px] uppercase tracking-wider font-bold text-amber-300 block">
+                    Expressive Target Sentence (“Where is it?”)
+                  </span>
+                  <p id="expressive-sentence-output" class="text-xs sm:text-sm font-bold text-white">
+                    Tap a glowing preposition spot in the scene to place Jovi!
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-speak-expressive" onclick="speakExpressiveSentence()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+                  🔊 Say Sentence
+                </button>
+                <button id="btn-bark-Quick" onclick="playSoundEffect('bark')" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition">
+                  🐾 Woof!
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Shaila's SLP Clinical Companion Drawer (4 cols) -->
+        <aside id="slp-clinician-drawer" class="lg:col-span-4 space-y-4">
+          <div class="bg-indigo-950 text-white rounded-3xl p-5 shadow-md border border-indigo-800 space-y-4">
+            <div class="flex items-center justify-between border-b border-indigo-800 pb-3">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-300">Shaila's Clinical Companion</span>
+                <h3 class="text-base font-bold text-white">Spatial &amp; Direction Scaffolds</h3>
+              </div>
+              <span class="text-2xl">👩‍🏫</span>
+            </div>
+
+            <!-- Dynamic Clinical Prompts for Current Setting -->
+            <div class="space-y-2.5">
+              <div class="bg-indigo-900/70 p-3 rounded-2xl border border-indigo-700/70">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                  📍 Receptive Concept Check
+                </span>
+                <p id="slp-spatial-receptive" class="text-xs sm:text-sm text-indigo-50 leading-relaxed"></p>
+              </div>
+
+              <div class="bg-indigo-900/70 p-3 rounded-2xl border border-indigo-700/70">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300 block mb-1">
+                  🗣️ Expressive Sentence Frame
+                </span>
+                <p id="slp-spatial-frame" class="text-xs sm:text-sm text-indigo-50 leading-relaxed"></p>
+              </div>
+
+              <div class="bg-indigo-900/70 p-3 rounded-2xl border border-indigo-700/70">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-pink-300 block mb-1">
+                  🧠 Critical Thinking &amp; “Why?”
+                </span>
+                <p id="slp-spatial-why" class="text-xs sm:text-sm text-indigo-50 leading-relaxed"></p>
+              </div>
+
+              <div class="bg-indigo-900/70 p-3 rounded-2xl border border-indigo-700/70">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300 block mb-1">
+                  🚧 Barrier Game / Peer Prompt
+                </span>
+                <p id="slp-spatial-barrier" class="text-xs sm:text-sm text-indigo-50 leading-relaxed"></p>
+              </div>
+            </div>
+
+            <!-- Quick Trial Scoring Strip -->
+            <div class="pt-3 border-t border-indigo-800 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-200">Quick Trial Logger</span>
+                <span id="drawer-accuracy-badge" class="text-xs font-bold text-amber-300">0 / 0 (0%)</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <button id="btn-score-ind" onclick="recordTrial('independent')" class="py-2 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow transition text-center">
+                  ✅ Indep.<br><span id="count-ind" class="text-sm">0</span>
+                </button>
+                <button id="btn-score-cued" onclick="recordTrial('cued')" class="py-2 px-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition text-center">
+                  💡 Cued<br><span id="count-cued" class="text-sm">0</span>
+                </button>
+                <button id="btn-score-model" onclick="recordTrial('modeled')" class="py-2 px-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition text-center">
+                  🤝 Modeled<br><span id="count-model" class="text-sm">0</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 2: SLP INSTRUCTOR PREPARATION GUIDE
+         ========================================== -->
+    <section id="view-guide" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">
+              Clinician Walkthrough &amp; Lesson Blueprint
+            </span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+              📋 SLP Instructor Preparation Guide: “Where is Jovi?”
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              How to use Jovi, Piggy, and Snoop to target receptive/expressive prepositions, 1–3 step directions, WH-questions, and peer barrier games.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-copy-prep-guide" onclick="copyPrepGuideMarkdown()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+              📋 Copy Guide (Markdown)
+            </button>
+            <button id="btn-launch-scene-from-guide" onclick="switchMainTab('scene')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sky-400 hover:bg-sky-300 text-slate-950 shadow transition">
+              🗺️ Open Interactive Scene &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Step Setup Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-900 text-amber-300">1 • Frictionless Placement</span>
+            <h3 class="text-base font-bold text-slate-900">Tap-to-Place on Any Screen</h3>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+              Students simply tap a character in the top tray (<strong>🐕‍🦺 Jovi</strong>, <strong>🐷 Piggy</strong>, <strong>🐕 Snoop</strong>, or a prop) and then tap any of the <strong>8 labeled preposition zones</strong> in the scene (<code class="bg-white px-1 rounded">ON</code>, <code class="bg-white px-1 rounded">UNDER</code>, <code class="bg-white px-1 rounded">IN</code>, <code class="bg-white px-1 rounded">NEXT TO</code>, <code class="bg-white px-1 rounded">BEHIND</code>, <code class="bg-white px-1 rounded">IN FRONT OF</code>, <code class="bg-white px-1 rounded">BETWEEN</code>, <code class="bg-white px-1 rounded">ABOVE</code>). Multiple characters can share the scene at once!
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-sky-50/70 border border-sky-200 space-y-2.5">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-sky-600 text-white">2 • Three Clinical Modes</span>
+            <h3 class="text-base font-bold text-slate-900">Receptive, Expressive &amp; Pragmatic</h3>
+            <ul class="text-xs sm:text-sm text-slate-700 space-y-1 list-disc list-inside leading-relaxed">
+              <li><strong>🎯 Follow Directions:</strong> Auto-checks 1-step, 2-step (<em>First/Then</em>), and complex (<em>Before/After</em>) directions.</li>
+              <li><strong>🕵️ Hide &amp; Seek Piggy:</strong> Hides Piggy secretly so students must ask prepositional questions (<em>“Is Piggy UNDER the deck?”</em>) before peeking!</li>
+              <li><strong>🎨 Free Barrier Scene:</strong> Students give each other multi-step directions to build matching scenes.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-2.5">
+            <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-700 text-white">3 • Spatial AAC Strip</span>
+            <h3 class="text-base font-bold text-slate-900">Multimodal Preposition Modeling</h3>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+              The bottom AAC strip features color-coded spatial prepositions (<code class="bg-white px-1 rounded">ON</code>, <code class="bg-white px-1 rounded">IN</code>, <code class="bg-white px-1 rounded">UNDER</code>, <code class="bg-white px-1 rounded">NEXT TO</code>, <code class="bg-white px-1 rounded">BEHIND</code>, <code class="bg-white px-1 rounded">IN FRONT</code>, <code class="bg-white px-1 rounded">BETWEEN</code>) alongside core verbs (<code class="bg-white px-1 rounded">PUT</code>, <code class="bg-white px-1 rounded">LOOK</code>, <code class="bg-white px-1 rounded">WHERE</code>) so students can build and speak full sentences.
+            </p>
+          </div>
+        </div>
+
+        <!-- 25-30 Minute Session Flow -->
+        <div class="bg-amber-50/60 rounded-2xl p-5 border border-amber-200 space-y-4">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900">
+            ⏱️ Recommended 25–30 Minute Therapy Session Flow
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5">
+            <div class="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+              <span class="text-xs font-extrabold text-amber-800 uppercase">Minutes 0–4 • Contrast Warm-Up</span>
+              <h4 class="text-sm font-bold text-slate-900">1. Preposition Deck Preview</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Open <strong>🃏 Preposition Deck</strong> to review the target spatial pair (e.g., <em>ON vs. UNDER</em> or <em>IN FRONT OF vs. BEHIND</em>) with Jovi and Piggy visual anchor cards.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+              <span class="text-xs font-extrabold text-sky-700 uppercase">Minutes 4–14 • Receptive Drills</span>
+              <h4 class="text-sm font-bold text-slate-900">2. Following Directions Mode</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                In <strong>🗺️ Interactive Scene</strong>, select Tier 1 (1-Step), Tier 2 (<em>First/Then</em>), or Tier 3 (<em>Before/After</em>). Have the student listen (or click <strong>🗣️ Speak Prompt</strong>) and place the items.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+              <span class="text-xs font-extrabold text-pink-700 uppercase">Minutes 14–22 • Expressive Turn</span>
+              <h4 class="text-sm font-bold text-slate-900">3. Hide &amp; Seek Piggy</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Switch to <strong>🕵️ Hide &amp; Seek Piggy</strong>. Require the student to formulate a full prepositional guess (verbal or via the AAC strip) <em>before</em> tapping a hotspot to check if Piggy is hiding there!
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+              <span class="text-xs font-extrabold text-indigo-700 uppercase">Minutes 22–28 • Peer Barrier Game</span>
+              <h4 class="text-sm font-bold text-slate-900">4. Student becomes the Director</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Switch to <strong>🎨 Free Barrier Scene</strong>. Let the student give YOU (or a peer) a 2-step direction to place Jovi, Snoop, and the dinner bowl, then export your SOAP note in <strong>📊 SLP Session Data</strong>!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Caseload Differentiation Table -->
+        <div class="space-y-3">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900">
+            🎯 Elementary Caseload Differentiation Matrix (K–5th Grade)
+          </h3>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-slate-900 text-white">
+                  <th class="p-3 font-bold">Student Group</th>
+                  <th class="p-3 font-bold">Target Concepts</th>
+                  <th class="p-3 font-bold">Recommended Mode &amp; Setting</th>
+                  <th class="p-3 font-bold">Clinical Cueing Strategy</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 bg-white">
+                <tr>
+                  <td class="p-3 font-bold text-slate-900">Early Elementary (K–1st) &amp; Multimodal AAC Users</td>
+                  <td class="p-3 text-slate-700"><code class="bg-slate-100 px-1 rounded">IN</code>, <code class="bg-slate-100 px-1 rounded">ON</code>, <code class="bg-slate-100 px-1 rounded">UNDER</code> + 1-Step Directions &amp; <em>“Where?”</em> questions</td>
+                  <td class="p-3 text-slate-700">Tier 1 Directions in <strong>🌳 Field Club Yard</strong> or <strong>🛋️ Living Room</strong></td>
+                  <td class="p-3 text-slate-700">Model <code class="bg-slate-100 px-1 rounded">PUT</code> + <code class="bg-slate-100 px-1 rounded">JOVI</code> + <code class="bg-slate-100 px-1 rounded">IN</code> on the bottom AAC bar before tapping the watering tray</td>
+                </tr>
+                <tr class="bg-slate-50/70">
+                  <td class="p-3 font-bold text-slate-900">Mid-Elementary (2nd–3rd) • Expanding Utterances &amp; Sequencing</td>
+                  <td class="p-3 text-slate-700"><code class="bg-slate-100 px-1 rounded">NEXT TO</code>, <code class="bg-slate-100 px-1 rounded">IN FRONT OF</code>, <code class="bg-slate-100 px-1 rounded">BEHIND</code> + 2-Step <em>First/Then</em> Directions</td>
+                  <td class="p-3 text-slate-700">Tier 2 Directions &amp; <strong>🕵️ Hide &amp; Seek Piggy</strong> across all 4 rooms</td>
+                  <td class="p-3 text-slate-700">Have the student repeat both parts of the plan before moving items, then read the <strong>Expressive Target Sentence</strong> aloud</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-slate-900">Upper Elementary (4th–5th) • Working Memory &amp; Temporal Directions</td>
+                  <td class="p-3 text-slate-700"><code class="bg-slate-100 px-1 rounded">BETWEEN</code>, <code class="bg-slate-100 px-1 rounded">ABOVE</code> + Conditional / Temporal (<em>Before, After</em>)</td>
+                  <td class="p-3 text-slate-700">Tier 3 Directions (where sentence order reverses action order!) &amp; <strong>🎨 Barrier Scene</strong></td>
+                  <td class="p-3 text-slate-700">Focus on clause order: <em>“Before you put X, put Y”</em> requires placing Y first! Have students create trick directions for peers</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 3: VISUAL PREPOSITION ANCHOR DECK
+         ========================================== -->
+    <section id="view-cards" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+              Visual Teaching Mini-Posters
+            </span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+              🃏 Jovi &amp; Piggy's 8 Core Preposition Anchor Cards
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Click any card to hear the spatial word spoken aloud, practice the example sentence, and jump straight to practicing it in the scene!
+            </p>
+          </div>
+        </div>
+
+        <div id="preposition-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 4: SLP SESSION DATA & SOAP NOTE EXPORT
+         ========================================== -->
+    <section id="view-data" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">
+              Bellevue Public Schools SLP Documentation Helper
+            </span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">📊 Spatial &amp; Directions Session Progress Generator</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-copy-soap" onclick="copySoapNote()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+              📋 Copy Progress Note
+            </button>
+            <button id="btn-reset-session" onclick="resetSessionData()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              🗑️ Reset Counts
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="input-student-initials" class="block text-xs font-bold uppercase text-slate-600 mb-1">Student Initials / Group</label>
+            <input id="input-student-initials" type="text" placeholder="e.g., A.R. (1st Grade)" oninput="updateSoapNotePreview()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm" />
+          </div>
+          <div>
+            <label for="select-primary-goal" class="block text-xs font-bold uppercase text-slate-600 mb-1">Primary Clinical Focus</label>
+            <select id="select-primary-goal" onchange="updateSoapNotePreview()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+              <option value="comprehending and following 1-step and 2-step spatial directions (in, on, under, next to, behind, in front of, between, above)">Following 1–2 Step Spatial Directions</option>
+              <option value="following complex multi-step directions containing temporal/conditional concepts (first/then, before/after)">Complex Temporal Directions (First/Then, Before/After)</option>
+              <option value="answering 'Where' questions and formulating expanded prepositional phrases">Expressive Prepositions &amp; Answering 'Where' Questions</option>
+              <option value="giving clear spatial directions to a communication partner during barrier game activities">Pragmatic Barrier Game Direction-Giving</option>
+              <option value="multimodal core and spatial vocabulary expression using aided AAC modeling">Multimodal Spatial AAC Expression</option>
+            </select>
+          </div>
+          <div>
+            <label for="input-clinician-notes" class="block text-xs font-bold uppercase text-slate-600 mb-1">Clinician Observation Note</label>
+            <input id="input-clinician-notes" type="text" placeholder="e.g., Mastered ON/UNDER; needed visual cue for BEHIND vs. IN FRONT OF." oninput="updateSoapNotePreview()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <span class="text-xs font-bold text-emerald-800 uppercase">Independent</span>
+            <p id="stat-ind" class="text-2xl font-extrabold text-emerald-950 mt-1">0</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+            <span class="text-xs font-bold text-amber-800 uppercase">Verbal / Visual Cue</span>
+            <p id="stat-cued" class="text-2xl font-extrabold text-amber-950 mt-1">0</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200">
+            <span class="text-xs font-bold text-rose-800 uppercase">Modeled</span>
+            <p id="stat-model" class="text-2xl font-extrabold text-rose-950 mt-1">0</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200">
+            <span class="text-xs font-bold text-indigo-800 uppercase">Independence Rate</span>
+            <p id="stat-pct" class="text-2xl font-extrabold text-indigo-950 mt-1">0%</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label for="soap-note-textarea" class="block text-xs font-bold uppercase text-slate-600">Auto-Generated SLP Progress Summary (Ready to Paste)</label>
+          <textarea id="soap-note-textarea" rows="5" readonly class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-300 text-xs sm:text-sm font-mono text-slate-800"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 5: GITHUB REPO & VIBE-CODING KIT
+         ========================================== -->
+    <section id="view-github" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+              Zero-Dependency Single-File Web App
+            </span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">💻 GitHub Repository &amp; Vibe-Coding Kit (“Where is Jovi?”)</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-copy-readme" onclick="copyReadmeToClipboard()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-amber-300 shadow transition">
+              📄 Copy README.md
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+            <h3 class="text-base font-bold text-slate-900">🚀 How to Add This to GitHub or Shaila's Desktop</h3>
+            <ol class="text-xs sm:text-sm text-slate-700 space-y-2 list-decimal list-inside leading-relaxed">
+              <li><strong>Instant Offline Desktop File:</strong> Save this file as <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">index.html</code> on Shaila's desktop. Double-clicking it opens the app offline in Chrome, Edge, or Safari!</li>
+              <li><strong>New GitHub Repo (<code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">where-is-jovi</code>):</strong> Upload the unzipped files (<code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">index.html</code>, <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">INSTRUCTOR_PREP_GUIDE.md</code>, <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">README.md</code>) and turn on <strong>Settings &rarr; Pages &rarr; Deploy from main branch</strong>.</li>
+              <li><strong>Or Combine Both Apps in One Repo:</strong> You can even drop this file into your first repo as <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">where-is-jovi.html</code> so both apps live under the same GitHub Pages account!</li>
+            </ol>
+          </div>
+
+          <div class="bg-sky-50/70 rounded-2xl p-5 border border-sky-200 space-y-3">
+            <h3 class="text-base font-bold text-slate-900">✨ 3 Next Vibe-Coding Prompts for “Where is Jovi?”</h3>
+            <div class="space-y-2">
+              <div class="bg-white p-3 rounded-xl border border-sky-200 flex items-center justify-between gap-2">
+                <p class="text-xs text-slate-800 font-medium">“Add a ‘ Nebraska Lake Cabin’ 5th scene with a dock, boat, pine tree, and sandy beach so Jovi and Snoop can practice prepositions at the lake.”</p>
+                <button id="btn-vibe-1" onclick="copyVibePrompt(0)" class="px-2.5 py-1 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shrink-0">Copy</button>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-sky-200 flex items-center justify-between gap-2">
+                <p class="text-xs text-slate-800 font-medium">“Add a 2-Player ‘Split-Screen Barrier Game’ mode where Student A arranges Jovi &amp; Piggy on top and Student B tries to match it before clicking Reveal.”</p>
+                <button id="btn-vibe-2" onclick="copyVibePrompt(1)" class="px-2.5 py-1 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shrink-0">Copy</button>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-sky-200 flex items-center justify-between gap-2">
+                <p class="text-xs text-slate-800 font-medium">“Add descriptive adjectives (little, wet, muddy, pink, crunchy) to the directions so students follow attribute + spatial directions.”</p>
+                <button id="btn-vibe-3" onclick="copyVibePrompt(2)" class="px-2.5 py-1 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shrink-0">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       PINNED MULTIMODAL SPATIAL & CORE AAC STRIP
+       ========================================== -->
+  <footer id="aac-footer-bar" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t-2 border-slate-300 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-3 py-2.5 space-y-2">
+      <div class="flex items-center gap-2">
+        <div class="flex-1 min-h-[38px] bg-slate-100 rounded-xl px-3 py-1.5 border border-slate-300 flex flex-wrap items-center gap-1.5" id="aac-sentence-strip">
+          <span class="text-xs text-slate-400 italic">💬 Spatial &amp; Core AAC Strip: Tap words below to build &amp; speak a sentence (e.g., PUT + JOVI + UNDER)...</span>
+        </div>
+        <button id="btn-speak-strip" onclick="speakAacSentence()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow transition shrink-0">
+          🔊 Speak Strip
+        </button>
+        <button id="btn-clear-strip" onclick="clearAacSentence()" class="px-2.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition shrink-0">
+          ✖ Clear
+        </button>
+      </div>
+      <div id="aac-tiles-grid" class="grid grid-cols-7 sm:grid-cols-14 gap-1.5"></div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       APPLICATION LOGIC & SPATIAL SCENE ENGINE
+       ========================================== -->
+  <script>
+    // --- 1. MOVABLE TOKENS FROM JOVI'S REAL WORLD ---
+    const TOKENS = [
+      { id: "jovi", name: "Jovi", emoji: "🐕‍🦺", shortLabel: "Jovi (Scottie)" },
+      { id: "piggy", name: "Piggy", emoji: "🐷", shortLabel: "Stuffed Piggy" },
+      { id: "snoop", name: "Snoop", emoji: "🐕", shortLabel: "Brother Snoop" },
+      { id: "ball", name: "the squeaky ball", emoji: "🎾", shortLabel: "Squeaky Ball" },
+      { id: "socks", name: "the mismatched socks", emoji: "🧦", shortLabel: "Socks" },
+      { id: "bowl", name: "Jovi's dinner bowl", emoji: "🍲", shortLabel: "Dinner Bowl" },
+      { id: "bone", name: "the crunchy bone", emoji: "🦴", shortLabel: "Crunchy Bone" },
+      { id: "squirrel", name: "the squirrel", emoji: "🐿️", shortLabel: "Squirrel" }
+    ];
+
+    // --- 2. FOUR OMAHA SETTINGS & THEIR 8 PREPOSITION HOTSPOTS ---
+    const SETTINGS = {
+      yard: {
+        id: "yard",
+        name: "Field Club Backyard & Deck",
+        receptivePrompt: "Ask the student to point to or tap ON the deck vs. UNDER the deck, and IN the watering tray vs. NEXT TO the watering tray before moving characters.",
+        expressiveFrame: "Sentence Frame: “[Character] is [PREPOSITION] the [Yard Object]!” (e.g., “Jovi is IN the watering tray and Piggy is ON the patio chair!”)",
+        whyPrompt: "Critical Thinking: “Why did Jovi jump IN the watering tray? Why is Snoop resting UNDER the shady oak tree instead of in the water?”",
+        barrierPrompt: "Barrier Game Idea: Have Student A place Jovi, Piggy, and Snoop in the yard and give 3 spatial clues so Student B can match the exact layout.",
+        zones: [
+          { id: "on_chair", prep: "ON", refObj: "the patio chair", label: "ON chair", x: 465, y: 175 },
+          { id: "in_tray", prep: "IN", refObj: "the watering tray", label: "IN tray", x: 280, y: 235 },
+          { id: "next_tray", prep: "NEXT TO", refObj: "the watering tray", label: "NEXT TO tray", x: 175, y: 238 },
+          { id: "under_deck", prep: "UNDER", refObj: "the wooden deck", label: "UNDER deck", x: 95, y: 235 },
+          { id: "on_deck", prep: "ON", refObj: "the wooden deck", label: "ON deck", x: 95, y: 155 },
+          { id: "behind_fence", prep: "BEHIND", refObj: "the backyard fence", label: "BEHIND fence", x: 255, y: 82 },
+          { id: "in_front_steps", prep: "IN FRONT OF", refObj: "the deck steps", label: "IN FRONT OF steps", x: 185, y: 182 },
+          { id: "between_trees", prep: "BETWEEN", refObj: "the oak tree and the bush", label: "BETWEEN tree & bush", x: 510, y: 242 },
+          { id: "above_fence", prep: "ABOVE", refObj: "the backyard fence", label: "ABOVE fence", x: 375, y: 46 }
+        ]
+      },
+      living: {
+        id: "living",
+        name: "Hickory Street Living Room",
+        receptivePrompt: "Contrast IN FRONT OF the patrol window (where Jovi watches passing sedans) vs. BEHIND the blue sofa.",
+        expressiveFrame: "Sentence Frame: “I put [Character] [PREPOSITION] the [Living Room Item].”",
+        whyPrompt: "Critical Thinking: “If Piggy is ON the sofa out of reach, why is it smarter for Jovi to sit IN FRONT OF Dad and nudge his knee than jump ON the book?”",
+        barrierPrompt: "Barrier Game Idea: Hide the mismatched socks, Piggy, and Jovi across the living room and take turns asking ‘Where is...?’",
+        zones: [
+          { id: "on_sofa", prep: "ON", refObj: "the blue sofa", label: "ON sofa", x: 425, y: 145 },
+          { id: "behind_sofa", prep: "BEHIND", refObj: "the blue sofa", label: "BEHIND sofa", x: 425, y: 82 },
+          { id: "under_table", prep: "UNDER", refObj: "the coffee table", label: "UNDER table", x: 265, y: 245 },
+          { id: "on_table", prep: "ON", refObj: "the coffee table", label: "ON table", x: 265, y: 182 },
+          { id: "in_basket", prep: "IN", refObj: "the sock basket", label: "IN sock basket", x: 105, y: 215 },
+          { id: "in_front_window", prep: "IN FRONT OF", refObj: "the patrol window", label: "IN FRONT OF window", x: 135, y: 128 },
+          { id: "next_bed", prep: "NEXT TO", refObj: "Jovi's dog bed", label: "NEXT TO dog bed", x: 410, y: 242 },
+          { id: "between_rug_bed", prep: "BETWEEN", refObj: "the sock basket and the table", label: "BETWEEN basket & table", x: 185, y: 228 },
+          { id: "above_window", prep: "ABOVE", refObj: "the patrol window", label: "ABOVE window", x: 135, y: 42 }
+        ]
+      },
+      kitchen: {
+        id: "kitchen",
+        name: "Jovi's Chef Kitchen",
+        receptivePrompt: "Practice spatial locations around Jovi's homemade chicken-and-rice prep station: ON the dish towel, UNDER the kitchen table, NEXT TO the food mat.",
+        expressiveFrame: "Sentence Frame: “[Character] is waiting [PREPOSITION] the [Kitchen Spot]!”",
+        whyPrompt: "Critical Thinking: “What happened in the story when Jovi ran ON the slippery blue dish towel? Where is a safer spot for Jovi to wait?”",
+        barrierPrompt: "Barrier Game Idea: Place Jovi's dinner bowl, the crunchy bone, and Snoop in the kitchen and describe where each item belongs.",
+        zones: [
+          { id: "on_towel", prep: "ON", refObj: "the slippery dish towel", label: "ON dish towel", x: 210, y: 238 },
+          { id: "under_ktable", prep: "UNDER", refObj: "the kitchen table", label: "UNDER table", x: 455, y: 238 },
+          { id: "on_ktable", prep: "ON", refObj: "the kitchen table", label: "ON table", x: 455, y: 158 },
+          { id: "in_pot", prep: "IN", refObj: "the big chef pot", label: "IN chef pot", x: 265, y: 88 },
+          { id: "in_front_fridge", prep: "IN FRONT OF", refObj: "the refrigerator", label: "IN FRONT OF fridge", x: 92, y: 185 },
+          { id: "next_mat", prep: "NEXT TO", refObj: "the red food mat", label: "NEXT TO food mat", x: 335, y: 242 },
+          { id: "behind_counter", prep: "BEHIND", refObj: "the kitchen counter", label: "BEHIND counter", x: 205, y: 105 },
+          { id: "between_fridge_counter", prep: "BETWEEN", refObj: "the fridge and the counter", label: "BETWEEN fridge & counter", x: 148, y: 185 },
+          { id: "above_counter", prep: "ABOVE", refObj: "the kitchen counter", label: "ABOVE counter", x: 265, y: 38 }
+        ]
+      },
+      school: {
+        id: "school",
+        name: "Shaila's Speech Therapy Room",
+        receptivePrompt: "Connect spatial words directly to classroom routines: UNDER the therapy table, IN the book bin, NEXT TO the beanbag chair.",
+        expressiveFrame: "Sentence Frame: “At school, [Character] is [PREPOSITION] the [Classroom Object].”",
+        whyPrompt: "Critical Thinking: “If Jovi visited Mrs. Schaefer's speech room at Bellevue, where would be the coziest spot for Jovi and Piggy to listen to a story?”",
+        barrierPrompt: "Barrier Game Idea: Have students give directions to set up the speech room for Jovi's visit!",
+        zones: [
+          { id: "on_therapy_table", prep: "ON", refObj: "the speech table", label: "ON speech table", x: 295, y: 168 },
+          { id: "under_therapy_table", prep: "UNDER", refObj: "the speech table", label: "UNDER speech table", x: 295, y: 242 },
+          { id: "in_book_bin", prep: "IN", refObj: "the story book bin", label: "IN book bin", x: 105, y: 222 },
+          { id: "next_beanbag", prep: "NEXT TO", refObj: "the cozy beanbag", label: "NEXT TO beanbag", x: 485, y: 235 },
+          { id: "on_beanbag", prep: "ON", refObj: "the cozy beanbag", label: "ON beanbag", x: 485, y: 182 },
+          { id: "behind_easel", prep: "BEHIND", refObj: "the whiteboard easel", label: "BEHIND easel", x: 165, y: 105 },
+          { id: "in_front_door", prep: "IN FRONT OF", refObj: "the classroom door", label: "IN FRONT OF door", x: 75, y: 148 },
+          { id: "between_table_bag", prep: "BETWEEN", refObj: "the speech table and the beanbag", label: "BETWEEN table & beanbag", x: 395, y: 225 },
+          { id: "above_board", prep: "ABOVE", refObj: "the whiteboard", label: "ABOVE whiteboard", x: 295, y: 42 }
+        ]
+      }
+    };
+
+    // --- 3. 8 CORE PREPOSITION ANCHOR CARDS ---
+    const PREPOSITION_CARDS = [
+      { prep: "ON", icon: "⬆️📦", title: "ON (Touching the Top)", example: "Piggy is ON the blue sofa.", cue: "Resting right on top of a surface." },
+      { prep: "UNDER", icon: "⬇️🪑", title: "UNDER (Below / Beneath)", example: "Jovi is hiding UNDER the table.", cue: "Covered by or right underneath something." },
+      { prep: "IN", icon: "📥🧺", title: "IN / INSIDE (Enclosed)", example: "The socks are IN the laundry basket.", cue: "Inside the walls or edges of a container." },
+      { prep: "NEXT TO", icon: "↔️🥣", title: "NEXT TO / BESIDE", example: "Snoop is sitting NEXT TO Jovi's bowl.", cue: "Right by the side of something." },
+      { prep: "IN FRONT OF", icon: "👀🪟", title: "IN FRONT OF (Facing / Ahead)", example: "Jovi is IN FRONT OF the patrol window.", cue: "Closer to us or facing the front side." },
+      { prep: "BEHIND", icon: "🫣🛋️", title: "BEHIND (In Back Of)", example: "The squirrel is peeking BEHIND the fence.", cue: "At the back side, partly hidden." },
+      { prep: "BETWEEN", icon: "🌳🐕‍🦺🌿", title: "BETWEEN (In the Middle of Two)", example: "Jovi stood BETWEEN the tree and the bush.", cue: "Has one thing on the left and one on the right." },
+      { prep: "ABOVE", icon: "☁️⬆️", title: "ABOVE / OVER (Higher Than)", example: "The squirrel leaped ABOVE the fence.", cue: "Up high in the air over something, not touching." }
+    ];
+
+    // --- 4. MULTIMODAL SPATIAL & CORE AAC WORDS ---
+    const AAC_WORDS = [
+      { word: "PUT", emoji: "👉", bg: "bg-emerald-600 text-white border-emerald-800" },
+      { word: "WHERE", emoji: "❓", bg: "bg-purple-600 text-white border-purple-800" },
+      { word: "LOOK", emoji: "👀", bg: "bg-emerald-500 text-white border-emerald-700" },
+      { word: "ON", emoji: "⬆️", bg: "bg-sky-500 text-white border-sky-700" },
+      { word: "IN", emoji: "📥", bg: "bg-sky-600 text-white border-sky-800" },
+      { word: "UNDER", emoji: "⬇️", bg: "bg-sky-500 text-white border-sky-700" },
+      { word: "NEXT TO", emoji: "↔️", bg: "bg-sky-600 text-white border-sky-800" },
+      { word: "IN FRONT", emoji: "🧍", bg: "bg-indigo-500 text-white border-indigo-700" },
+      { word: "BEHIND", emoji: "🫣", bg: "bg-indigo-600 text-white border-indigo-800" },
+      { word: "BETWEEN", emoji: "↔️", bg: "bg-indigo-500 text-white border-indigo-700" },
+      { word: "FIRST", emoji: "1️⃣", bg: "bg-amber-400 text-slate-950 border-amber-600" },
+      { word: "THEN", emoji: "2️⃣", bg: "bg-amber-500 text-slate-950 border-amber-700" },
+      { word: "JOVI", emoji: "🐕‍🦺", bg: "bg-amber-200 text-slate-900 border-amber-400" },
+      { word: "PIGGY", emoji: "🐷", bg: "bg-pink-200 text-pink-950 border-pink-400" }
+    ];
+
+    const VIBE_PROMPTS = [
+      "Add a 5th setting called 'Nebraska Lake Cabin' with a wooden dock, pontoon boat, pine tree, and beach towel so Jovi, Piggy, and Snoop can practice spatial concepts at the lake.",
+      "Add a 2-Player 'Barrier Game Challenge' tab where Student 1 arranges 3 characters on a secret board and gives verbal directions to Student 2, then clicks a 'Compare Boards' button to score how many match!",
+      "Add an 'Expanding Utterances Builder' bar below the scene with visual slots for Subject (Who) + Verb (is sitting / is hiding) + Preposition (Where) + Location so kids see the 4-part sentence structure."
+    ];
+
+    const PREP_GUIDE_MD = `# SLP Instructor Preparation Guide: "Where is Jovi?" Spatial & Following Directions Scene
+
+## 1. Quick 2-Minute Pre-Session Setup
+- **Select Setting**: Choose from 4 real-life contexts from Jovi's world: **Field Club Yard**, **Hickory Street Living Room**, **Jovi's Chef Kitchen**, or **Shaila's Speech Room**.
+- **Select Play Mode**:
+  - **Follow Directions**: Auto-generates and verifies 1-Step, 2-Step (First/Then), or 3-Step/Temporal (Before/After) directions.
+  - **Hide & Seek Piggy**: Secretly hides Piggy in one of the 9 spatial zones so students must ask prepositional questions ("Is Piggy UNDER the table?") before peeking.
+  - **Free Barrier Scene**: Open-ended placement for peer barrier games and expressive describing.
+- **Tap-to-Place Accessibility**: Students simply tap a character/prop in the top tray (Jovi, Piggy, Snoop, Squeaky Ball, Socks, Dinner Bowl, Bone, Squirrel) and tap any glowing preposition badge in the scene.
+
+## 2. Recommended 25-30 Minute Session Blueprint
+1. **Minutes 0-4 (Preposition Deck Preview)**: Open the **Preposition Deck** tab to review the day's target spatial contrast (e.g., ON vs. UNDER, or IN FRONT OF vs. BEHIND).
+2. **Minutes 4-14 (Receptive Following Directions)**: In **Follow Directions** mode, select Tier 1 (1-Step), Tier 2 (First/Then), or Tier 3 (Before/After). Log trials in the purple SLP drawer.
+3. **Minutes 14-22 (Expressive Hide & Seek Piggy)**: Switch to **Hide & Seek Piggy** mode. Have students build a prepositional phrase or question using the bottom Spatial AAC Strip before clicking a spot.
+4. **Minutes 22-28 (Barrier Game & Documentation)**: Switch to **Free Barrier Scene** so the student directs YOU where to put Jovi and Snoop, then copy your SOAP note in the **SLP Session Data** tab!
+`;
+
+    const README_TEXT = `# Where is Jovi? — Interactive Preposition & Following Directions SLP Scene 🧭🐕‍🦺🐷
+
+A single-file, browser-based Speech-Language Pathology (SLP) web application starring **Jovi** (15-lb black Scottish Terrier), **Piggy** (her pink stuffed pig), and **Snoop** (her older brother dog).
+
+## ✨ Key Clinical Features for Shaila's Caseload
+- **4 Interactive Omaha & School Settings**: Field Club Backyard & Deck, Hickory Street Living Room, Jovi's Chef Kitchen, and Shaila's Speech Therapy Room.
+- **9 Spatial Preposition Zones per Scene**: \`ON\`, \`UNDER\`, \`IN\`, \`NEXT TO\`, \`BEHIND\`, \`IN FRONT OF\`, \`BETWEEN\`, and \`ABOVE\`.
+- **3 Built-In Game Modes**:
+  1. **🎯 Follow Directions (3 Complexity Tiers)**: 1-Step basic prepositions, 2-Step sequential (\`First / Then\`), and complex temporal (\`Before / After\`) directions with automatic step verification.
+  2. **🕵️ Hide & Seek Piggy**: Expressive mystery game where students ask prepositional questions to find where Jovi hid Piggy.
+  3. **🎨 Free Barrier Scene**: Open-ended canvas for peer barrier games, spatial storytelling, and expanding utterances.
+- **📋 Built-In SLP Instructor Preparation Guide**: Complete session blueprint and K-5 differentiation matrix.
+- **💬 Multimodal Spatial & Core AAC Strip**: 14 color-coded tiles with Web Speech API voice output.
+- **📊 SLP Session Data & SOAP Note Generator**: Real-time tracking for Independent, Cued, and Modeled trials.
+`;
+
+    // --- 5. APPLICATION STATE ---
+    let state = {
+      currentTab: "scene",
+      currentSetting: "yard",
+      playMode: "directions", // 'directions' | 'mystery' | 'free'
+      directionTier: 1, // 1 | 2 | 3
+      selectedTokenId: "jovi",
+      placedItems: {}, // zoneId -> tokenId
+      activeDirection: null, // { steps: [{tokenId, zoneId, prep, refObj}], displayPrompt, temporalNote, currentStepIdx }
+      mysteryZoneId: null,
+      mysteryFound: false,
+      bonesEarned: 0,
+      slpDrawerOpen: true,
+      aacBarOpen: true,
+      soundEnabled: true,
+      aacSentence: [],
+      lastExpressiveSentence: "Jovi is ready to explore!",
+      trials: {
+        independent: 0,
+        cued: 0,
+        modeled: 0
+      }
+    };
+
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem("where_is_jovi_state_v1");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed.bonesEarned === "number") state.bonesEarned = parsed.bonesEarned;
+          if (parsed.trials) state.trials = parsed.trials;
+        }
+      } catch (e) {
+        // Ignore storage errors in sandboxed iframes
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem("where_is_jovi_state_v1", JSON.stringify({
+          bonesEarned: state.bonesEarned,
+          trials: state.trials
+        }));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    // --- 6. SYNTHESIZED SOUND EFFECTS & SPEECH ---
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSoundEffect(type) {
+      if (!state.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        if (type === "bark") {
+          [0, 0.15].forEach((offset, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(idx === 0 ? 230 : 270, now + offset);
+            osc.frequency.exponentialRampToValueAtTime(115, now + offset + 0.11);
+            gain.gain.setValueAtTime(0.24, now + offset);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + offset + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.13);
+          });
+        } else if (type === "pop") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(760, now + 0.08);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === "success") {
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.18, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.008, now + idx * 0.08 + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.23);
+          });
+        } else if (type === "oops") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(175, now + 0.2);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.23);
+        }
+      } catch (e) {
+        // Ignore audio errors
+      }
+    }
+
+    function speakText(text) {
+      if (!state.soundEnabled) return;
+      try {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.rate = 0.95;
+          utter.pitch = 1.04;
+          window.speechSynthesis.speak(utter);
+        }
+      } catch (e) {
+        // Ignore speech errors
+      }
+    }
+
+    function showToast(emoji, message) {
+      const container = document.getElementById("toast-container");
+      const emojiEl = document.getElementById("toast-emoji");
+      const textEl = document.getElementById("toast-text");
+      if (!container || !emojiEl || !textEl) return;
+      emojiEl.textContent = emoji;
+      textEl.textContent = message;
+      container.classList.remove("hidden");
+      setTimeout(() => {
+        container.classList.add("hidden");
+      }, 3100);
+    }
+
+    function updateBoneHeader() {
+      const el = document.getElementById("header-bone-count");
+      if (el) el.textContent = String(state.bonesEarned);
+      saveState();
+    }
+
+    // --- 7. DIRECTION & MYSTERY GENERATOR ---
+    function getTokenById(id) {
+      return TOKENS.find((t) => t.id === id) || TOKENS[0];
+    }
+
+    function generateNewDirection() {
+      const setting = SETTINGS[state.currentSetting];
+      const zones = setting.zones;
+      state.placedItems = {};
+
+      if (state.playMode === "mystery") {
+        const randZone = zones[Math.floor(Math.random() * zones.length)];
+        state.mysteryZoneId = randZone.id;
+        state.mysteryFound = false;
+        document.getElementById("prompt-mode-badge").textContent = "🕵️ Mystery Hide & Seek";
+        document.getElementById("step-progress-pill").textContent = "Ask a 'Where' question before clicking a spot!";
+        document.getElementById("active-prompt-text").textContent = `Jovi hid Piggy somewhere in the ${setting.name}! Ask “Is Piggy [PREPOSITION] the [Object]?” and tap a spot to peek!`;
+        renderSceneStage();
+        return;
+      }
+
+      if (state.playMode === "free") {
+        document.getElementById("prompt-mode-badge").textContent = "🎨 Free Barrier Scene";
+        document.getElementById("step-progress-pill").textContent = "Place as many characters & items as you want!";
+        document.getElementById("active-prompt-text").textContent = `Free Scene & Barrier Game Mode: Select any character below and tap any spot in the ${setting.name} to build and describe your scene!`;
+        renderSceneStage();
+        return;
+      }
+
+      // Directions Mode (Tier 1, 2, or 3)
+      const shuffledZones = [...zones].sort(() => Math.random() - 0.5);
+      const shuffledTokens = [...TOKENS].sort(() => Math.random() - 0.5);
+
+      if (state.directionTier === 1) {
+        const t1 = shuffledTokens[0];
+        const z1 = shuffledZones[0];
+        state.activeDirection = {
+          steps: [{ tokenId: t1.id, zoneId: z1.id, prep: z1.prep, refObj: z1.refObj }],
+          currentStepIdx: 0,
+          displayPrompt: `Put ${t1.emoji} ${t1.name} ${z1.prep} ${z1.refObj}.`
+        };
+        document.getElementById("prompt-mode-badge").textContent = "1-Step Spatial Direction";
+        document.getElementById("step-progress-pill").textContent = `Step 1 of 1 • Select ${t1.name} first!`;
+        state.selectedTokenId = t1.id;
+      } else if (state.directionTier === 2) {
+        const t1 = shuffledTokens[0];
+        const t2 = shuffledTokens[1];
+        const z1 = shuffledZones[0];
+        const z2 = shuffledZones[1];
+        state.activeDirection = {
+          steps: [
+            { tokenId: t1.id, zoneId: z1.id, prep: z1.prep, refObj: z1.refObj },
+            { tokenId: t2.id, zoneId: z2.id, prep: z2.prep, refObj: z2.refObj }
+          ],
+          currentStepIdx: 0,
+          displayPrompt: `FIRST put ${t1.emoji} ${t1.name} ${z1.prep} ${z1.refObj}, THEN put ${t2.emoji} ${t2.name} ${z2.prep} ${z2.refObj}.`
+        };
+        document.getElementById("prompt-mode-badge").textContent = "2-Step (First / Then)";
+        document.getElementById("step-progress-pill").textContent = `Step 1 of 2 • Start with ${t1.name}!`;
+        state.selectedTokenId = t1.id;
+      } else {
+        // Tier 3: "BEFORE you put X, put Y" (temporal reversal!)
+        const tFirstAction = shuffledTokens[0];
+        const tSecondAction = shuffledTokens[1];
+        const zFirstAction = shuffledZones[0];
+        const zSecondAction = shuffledZones[1];
+        state.activeDirection = {
+          steps: [
+            { tokenId: tFirstAction.id, zoneId: zFirstAction.id, prep: zFirstAction.prep, refObj: zFirstAction.refObj },
+            { tokenId: tSecondAction.id, zoneId: zSecondAction.id, prep: zSecondAction.prep, refObj: zSecondAction.refObj }
+          ],
+          currentStepIdx: 0,
+          displayPrompt: `Careful Listen! BEFORE you put ${tSecondAction.emoji} ${tSecondAction.name} ${zSecondAction.prep} ${zSecondAction.refObj}, put ${tFirstAction.emoji} ${tFirstAction.name} ${zFirstAction.prep} ${zFirstAction.refObj}!`
+        };
+        document.getElementById("prompt-mode-badge").textContent = "Temporal (Before / After)";
+        document.getElementById("step-progress-pill").textContent = `Step 1 of 2 • Which one happens FIRST?`;
+        state.selectedTokenId = tFirstAction.id;
+      }
+
+      document.getElementById("active-prompt-text").textContent = state.activeDirection.displayPrompt;
+      renderTokenTray();
+      renderSceneStage();
+    }
+
+    // --- 8. SVG ILLUSTRATIONS FOR ALL 4 SETTINGS + TOKENS ---
+    function renderTokenSvgBadge(tokenId, x, y) {
+      const token = getTokenById(tokenId);
+      if (tokenId === "jovi") {
+        // Custom Mini Black Scottie SVG Sprite!
+        return `
+          <g transform="translate(${x - 28}, ${y - 32})" class="bob-anim">
+            <circle cx="28" cy="30" r="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+            <!-- Scottie Body & Pointed Ears -->
+            <path d="M12,34 Q26,28 38,32 L40,46 L12,46 Z" fill="#0f172a"/>
+            <polygon points="30,22 34,10 38,22" fill="#020617"/>
+            <polygon points="36,22 41,10 44,22" fill="#0f172a"/>
+            <path d="M30,20 Q42,18 49,24 L49,33 Q42,37 35,34 Z" fill="#0f172a"/>
+            <path d="M35,32 L41,35" stroke="#e11d48" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="40" cy="24" r="2" fill="#ffffff"/>
+            <rect x="14" y="45" width="6" height="5" rx="2" fill="#020617"/>
+            <rect x="34" y="45" width="6" height="5" rx="2" fill="#020617"/>
+          </g>
+        `;
+      }
+      if (tokenId === "piggy") {
+        // Custom Mini Pink Stuffed Piggy SVG Sprite!
+        return `
+          <g transform="translate(${x - 26}, ${y - 30})" class="bob-anim">
+            <circle cx="26" cy="28" r="24" fill="#fce7f3" stroke="#ec4899" stroke-width="2.5"/>
+            <ellipse cx="27" cy="31" rx="15" ry="11" fill="#f472b6" stroke="#db2777" stroke-width="1.5"/>
+            <circle cx="18" cy="25" r="9" fill="#f9a8d4" stroke="#db2777" stroke-width="1.5"/>
+            <ellipse cx="12" cy="26" rx="4.5" ry="3.5" fill="#ec4899"/>
+            <circle cx="17" cy="23" r="1.6" fill="#0f172a"/>
+          </g>
+        `;
+      }
+      return `
+        <g transform="translate(${x - 24}, ${y - 28})" class="bob-anim">
+          <circle cx="24" cy="26" r="23" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+          <text x="24" y="33" text-anchor="middle" font-size="22">${token.emoji}</text>
+        </g>
+      `;
+    }
+
+    function buildSettingBackgroundSvg(settingId) {
+      if (settingId === "yard") {
+        return `
+          <rect x="0" y="0" width="620" height="175" fill="#e0f2fe"/>
+          <rect x="0" y="175" width="620" height="125" fill="#86efac"/>
+          <!-- Sun -->
+          <circle cx="555" cy="44" r="24" fill="#fde047"/>
+          <!-- Backyard Wooden Fence -->
+          <g fill="#b45309" stroke="#78350f" stroke-width="2">
+            <rect x="190" y="78" width="36" height="100" rx="4"/>
+            <rect x="230" y="78" width="36" height="100" rx="4"/>
+            <rect x="270" y="78" width="36" height="100" rx="4"/>
+            <rect x="310" y="78" width="36" height="100" rx="4"/>
+            <rect x="350" y="78" width="36" height="100" rx="4"/>
+            <rect x="390" y="78" width="36" height="100" rx="4"/>
+          </g>
+          <!-- Field Club Wooden Deck (Left) -->
+          <rect x="20" y="145" width="155" height="24" rx="4" fill="#92400e" stroke="#451a03" stroke-width="2.5"/>
+          <rect x="32" y="169" width="14" height="75" fill="#78350f"/>
+          <rect x="145" y="169" width="14" height="75" fill="#78350f"/>
+          <!-- Deck Dark Under-Space -->
+          <rect x="46" y="172" width="99" height="68" rx="6" fill="#451a03" opacity="0.35"/>
+          <!-- Blue Watering Tray (Center) -->
+          <ellipse cx="280" cy="240" rx="64" ry="20" fill="#0284c7" stroke="#0369a1" stroke-width="3"/>
+          <ellipse cx="280" cy="238" rx="52" ry="14" fill="#38bdf8"/>
+          <!-- Patio Chair -->
+          <rect x="420" y="135" width="90" height="65" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="3"/>
+          <!-- Oak Tree & Bush (Right) -->
+          <rect x="468" y="185" width="18" height="65" fill="#78350f"/>
+          <circle cx="477" cy="165" r="34" fill="#15803d"/>
+          <ellipse cx="558" cy="235" rx="34" ry="24" fill="#16a34a"/>
+        `;
+      } else if (settingId === "living") {
+        return `
+          <rect x="0" y="0" width="620" height="195" fill="#fef3c7"/>
+          <rect x="0" y="195" width="620" height="105" fill="#d97706" opacity="0.22"/>
+          <!-- Front Patrol Window -->
+          <rect x="65" y="48" width="140" height="92" rx="8" fill="#bae6fd" stroke="#78350f" stroke-width="5"/>
+          <line x1="135" y1="48" x2="135" y2="140" stroke="#78350f" stroke-width="4"/>
+          <line x1="65" y1="94" x2="205" y2="94" stroke="#78350f" stroke-width="4"/>
+          <!-- Blue Living Room Sofa -->
+          <rect x="330" y="95" width="195" height="95" rx="16" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="3"/>
+          <rect x="315" y="130" width="225" height="65" rx="12" fill="#2563eb"/>
+          <!-- Laundry Sock Basket -->
+          <path d="M62,195 L148,195 L136,248 L74,248 Z" fill="#d97706" stroke="#92400e" stroke-width="3"/>
+          <!-- Wooden Coffee Table -->
+          <rect x="205" y="178" width="120" height="16" rx="4" fill="#78350f"/>
+          <rect x="215" y="194" width="10" height="52" fill="#451a03"/>
+          <rect x="305" y="194" width="10" height="52" fill="#451a03"/>
+          <!-- Jovi's Dog Bed -->
+          <ellipse cx="505" cy="242" rx="68" ry="22" fill="#334155"/>
+          <ellipse cx="505" cy="238" rx="54" ry="15" fill="#cbd5e1"/>
+        `;
+      } else if (settingId === "kitchen") {
+        return `
+          <rect x="0" y="0" width="620" height="195" fill="#fffbeb"/>
+          <rect x="0" y="195" width="620" height="105" fill="#e2e8f0"/>
+          <!-- Refrigerator (Left) -->
+          <rect x="35" y="55" width="110" height="150" rx="8" fill="#cbd5e1" stroke="#64748b" stroke-width="3"/>
+          <line x1="35" y1="120" x2="145" y2="120" stroke="#64748b" stroke-width="3"/>
+          <!-- Kitchen Counter & Red Chef Pot -->
+          <rect x="175" y="105" width="165" height="95" rx="6" fill="#475569"/>
+          <rect x="170" y="95" width="175" height="14" rx="4" fill="#94a3b8"/>
+          <rect x="230" y="62" width="68" height="34" rx="6" fill="#dc2626"/>
+          <!-- Slippery Blue Dish Towel -->
+          <rect x="155" y="226" width="110" height="28" rx="6" fill="#38bdf8" stroke="#0284c7" stroke-width="2.5"/>
+          <!-- Red Food Mat -->
+          <rect x="295" y="228" width="80" height="24" rx="6" fill="#ef4444"/>
+          <!-- Kitchen Table (Right) -->
+          <rect x="390" y="155" width="140" height="16" rx="4" fill="#b45309"/>
+          <rect x="402" y="171" width="12" height="75" fill="#78350f"/>
+          <rect x="505" y="171" width="12" height="75" fill="#78350f"/>
+        `;
+      } else {
+        // School Speech Therapy Room
+        return `
+          <rect x="0" y="0" width="620" height="195" fill="#f0fdf4"/>
+          <rect x="0" y="195" width="620" height="105" fill="#cbd5e1"/>
+          <!-- Classroom Door (Left) -->
+          <rect x="30" y="45" width="88" height="150" rx="4" fill="#b45309" stroke="#78350f" stroke-width="3"/>
+          <!-- Whiteboard Easel -->
+          <rect x="135" y="55" width="110" height="82" rx="6" fill="#ffffff" stroke="#475569" stroke-width="4"/>
+          <!-- Story Book Bin -->
+          <rect x="62" y="198" width="86" height="48" rx="6" fill="#eab308" stroke="#ca8a04" stroke-width="3"/>
+          <!-- Speech Therapy Table (Center) -->
+          <rect x="220" y="162" width="155" height="20" rx="8" fill="#0284c7" stroke="#0369a1" stroke-width="3"/>
+          <rect x="238" y="182" width="12" height="68" fill="#475569"/>
+          <rect x="345" y="182" width="12" height="68" fill="#475569"/>
+          <!-- Cozy Beanbag Chair (Right) -->
+          <ellipse cx="495" cy="205" rx="66" ry="38" fill="#ec4899" stroke="#be185d" stroke-width="3"/>
+        `;
+      }
+    }
+
+    function renderSceneStage() {
+      const setting = SETTINGS[state.currentSetting];
+      const container = document.getElementById("spatial-svg-container");
+      if (!container || !setting) return;
+
+      // Update SLP Drawer prompts for current setting
+      document.getElementById("slp-spatial-receptive").textContent = setting.receptivePrompt;
+      document.getElementById("slp-spatial-frame").textContent = setting.expressiveFrame;
+      document.getElementById("slp-spatial-why").textContent = setting.whyPrompt;
+      document.getElementById("slp-spatial-barrier").textContent = setting.barrierPrompt;
+
+      const bgSvg = buildSettingBackgroundSvg(setting.id);
+
+      // Render interactive preposition hotspot badges + any placed tokens
+      const zonesSvg = setting.zones.map((z) => {
+        const placedTokenId = state.placedItems[z.id];
+        const isMysteryWinner = state.playMode === "mystery" && state.mysteryFound && state.mysteryZoneId === z.id;
+
+        const pillWidth = Math.max(92, z.label.length * 7.2 + 18);
+        const halfW = pillWidth / 2;
+
+        return `
+          <g onclick="handleZoneTap('${z.id}')" class="cursor-pointer group">
+            <!-- Target Drop Ring -->
+            <ellipse cx="${z.x}" cy="${z.y + 12}" rx="34" ry="13" fill="${placedTokenId ? '#dcfce7' : '#ffffff'}" fill-opacity="0.88" stroke="${placedTokenId ? '#16a34a' : '#0284c7'}" stroke-width="2.5" stroke-dasharray="${placedTokenId ? 'none' : '5 3'}"/>
+            <!-- Preposition Label Badge -->
+            <rect x="${z.x - halfW}" y="${z.y + 20}" width="${pillWidth}" height="22" rx="11" fill="${placedTokenId ? '#065f46' : '#0f172a'}" opacity="0.92"/>
+            <text x="${z.x}" y="${z.y + 35}" text-anchor="middle" fill="${placedTokenId ? '#fde047' : '#38bdf8'}" font-size="11" font-weight="bold" font-family="Inter, sans-serif">
+              ${z.label}
+            </text>
+            ${placedTokenId ? renderTokenSvgBadge(placedTokenId, z.x, z.y - 6) : ""}
+            ${isMysteryWinner ? renderTokenSvgBadge("piggy", z.x, z.y - 6) : ""}
+          </g>
+        `;
+      }).join("");
+
+      container.innerHTML = `
+        <svg viewBox="0 0 620 295" class="w-full h-auto select-none" role="img" aria-label="Interactive spatial scene for ${setting.name}">
+          ${bgSvg}
+          ${zonesSvg}
+        </svg>
+      `;
+    }
+
+    // --- 9. HANDLE ZONE TAP & EVALUATE DIRECTIONS / MYSTERY / FREE PLAY ---
+    function handleZoneTap(zoneId) {
+      const setting = SETTINGS[state.currentSetting];
+      const zone = setting.zones.find((z) => z.id === zoneId);
+      if (!zone) return;
+
+      const selectedToken = getTokenById(state.selectedTokenId);
+
+      // Mode B: Mystery Hide & Seek Piggy
+      if (state.playMode === "mystery") {
+        const guessSentence = `Is Piggy ${zone.prep} ${zone.refObj}?`;
+        state.lastExpressiveSentence = guessSentence;
+        document.getElementById("expressive-sentence-output").textContent = guessSentence;
+
+        if (zoneId === state.mysteryZoneId) {
+          state.mysteryFound = true;
+          state.bonesEarned += 2;
+          updateBoneHeader();
+          playSoundEffect("success");
+          const winSentence = `YES! Piggy was hiding ${zone.prep} ${zone.refObj}! (+2 🦴)`;
+          state.lastExpressiveSentence = `Piggy is ${zone.prep} ${zone.refObj}!`;
+          document.getElementById("expressive-sentence-output").textContent = winSentence;
+          document.getElementById("step-progress-pill").textContent = "🎉 You found Piggy! Click 'New Direction' to hide Piggy again!";
+          showToast("🐷", winSentence);
+          renderSceneStage();
+        } else {
+          playSoundEffect("pop");
+          showToast("🔍", `Not ${zone.prep} ${zone.refObj}! Keep asking “Where is Piggy?”`);
+        }
+        return;
+      }
+
+      // Mode C: Free Scene / Barrier Game
+      if (state.playMode === "free") {
+        if (state.placedItems[zoneId] === state.selectedTokenId) {
+          delete state.placedItems[zoneId];
+        } else {
+          state.placedItems[zoneId] = state.selectedTokenId;
+        }
+        playSoundEffect("pop");
+        const sentence = `${selectedToken.name} is ${zone.prep} ${zone.refObj}!`;
+        state.lastExpressiveSentence = sentence;
+        document.getElementById("expressive-sentence-output").textContent = sentence;
+        renderSceneStage();
+        return;
+      }
+
+      // Mode A: Follow Directions Mode (Check expected token & zone!)
+      if (!state.activeDirection) {
+        generateNewDirection();
+        return;
+      }
+
+      const expectedStep = state.activeDirection.steps[state.activeDirection.currentStepIdx];
+      if (!expectedStep) return;
+
+      const expectedToken = getTokenById(expectedStep.tokenId);
+
+      if (state.selectedTokenId === expectedStep.tokenId && zoneId === expectedStep.zoneId) {
+        // Correct placement!
+        state.placedItems[zoneId] = state.selectedTokenId;
+        const stepSentence = `${expectedToken.name} is ${zone.prep} ${zone.refObj}!`;
+        state.lastExpressiveSentence = stepSentence;
+        document.getElementById("expressive-sentence-output").textContent = stepSentence;
+
+        state.activeDirection.currentStepIdx += 1;
+
+        if (state.activeDirection.currentStepIdx >= state.activeDirection.steps.length) {
+          // Completed all steps!
+          playSoundEffect("success");
+          state.bonesEarned += state.directionTier;
+          updateBoneHeader();
+          document.getElementById("step-progress-pill").textContent = `🌟 Completed! (+${state.directionTier} 🦴) Click 'New Direction' for the next turn!`;
+          showToast("🌟", `Awesome listening! ${stepSentence} (+${state.directionTier} 🦴)`);
+        } else {
+          // Advance to Step 2
+          playSoundEffect("pop");
+          const nextStep = state.activeDirection.steps[state.activeDirection.currentStepIdx];
+          const nextToken = getTokenById(nextStep.tokenId);
+          state.selectedTokenId = nextToken.id;
+          document.getElementById("step-progress-pill").textContent = `Great! Now Step 2 of 2: Move ${nextToken.name}!`;
+          showToast("👍", `Step 1 done! Now place ${nextToken.name}!`);
+          renderTokenTray();
+        }
+        renderSceneStage();
+      } else {
+        // Gentle clinical scaffold cue!
+        playSoundEffect("oops");
+        if (state.selectedTokenId !== expectedStep.tokenId) {
+          showToast("💡", `Check who to move first: Select ${expectedToken.emoji} ${expectedToken.name} in the tray!`);
+        } else {
+          showToast("💡", `Look closely for ${expectedStep.prep} ${expectedStep.refObj}!`);
+        }
+      }
+    }
+
+    // --- 10. UI CONTROLS & TABS ---
+    function renderTokenTray() {
+      const grid = document.getElementById("token-tray-grid");
+      const nameLabel = document.getElementById("selected-token-name");
+      if (!grid) return;
+
+      const currentToken = getTokenById(state.selectedTokenId);
+      if (nameLabel) nameLabel.textContent = `${currentToken.emoji} ${currentToken.shortLabel}`;
+
+      grid.innerHTML = TOKENS.map((t) => {
+        const isSelected = t.id === state.selectedTokenId;
+        const cls = isSelected
+          ? "bg-slate-900 text-amber-300 border-2 border-amber-400 shadow-md scale-[1.02]"
+          : "bg-slate-50 text-slate-800 border border-slate-200 hover:bg-slate-100";
+        return `
+          <button onclick="selectToken('${t.id}')" class="p-2 rounded-xl transition flex flex-col items-center justify-center text-center ${cls}">
+            <span class="text-xl leading-none">${t.emoji}</span>
+            <span class="text-[11px] font-bold mt-1 leading-tight">${t.shortLabel}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectToken(tokenId) {
+      state.selectedTokenId = tokenId;
+      playSoundEffect("pop");
+      renderTokenTray();
+    }
+
+    function selectSetting(settingId) {
+      state.currentSetting = settingId;
+      ["yard", "living", "kitchen", "school"].forEach((s) => {
+        const btn = document.getElementById("setting-btn-" + s);
+        if (btn) {
+          btn.className = s === settingId
+            ? "px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-amber-300 shadow"
+            : "px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+        }
+      });
+      generateNewDirection();
+    }
+
+    function selectPlayMode(mode) {
+      state.playMode = mode;
+      ["directions", "mystery", "free"].forEach((m) => {
+        const btn = document.getElementById("mode-btn-" + m);
+        if (btn) {
+          btn.className = m === mode
+            ? "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-sky-600 text-white shadow"
+            : "px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-700 hover:bg-white";
+        }
+      });
+      const dirRow = document.getElementById("directions-controls-row");
+      if (dirRow) {
+        if (mode === "directions") dirRow.classList.remove("hidden");
+        else dirRow.classList.add("hidden");
+      }
+      generateNewDirection();
+    }
+
+    function setDirectionTier(tier) {
+      state.directionTier = tier;
+      [1, 2, 3].forEach((t) => {
+        const btn = document.getElementById("tier-btn-" + t);
+        if (btn) {
+          btn.className = t === tier
+            ? "px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-600 text-white"
+            : "px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200";
+        }
+      });
+      generateNewDirection();
+    }
+
+    function clearAllPlacedItems() {
+      state.placedItems = {};
+      renderSceneStage();
+      showToast("🔄", "Cleared all characters from the scene!");
+    }
+
+    function speakCurrentPrompt() {
+      const text = document.getElementById("active-prompt-text").textContent;
+      speakText(text);
+    }
+
+    function speakExpressiveSentence() {
+      speakText(state.lastExpressiveSentence);
+      showToast("🗣️", `Speaking: “${state.lastExpressiveSentence}”`);
+    }
+
+    function switchMainTab(tabName) {
+      state.currentTab = tabName;
+      const tabs = ["scene", "guide", "cards", "data", "github"];
+      tabs.forEach((t) => {
+        const view = document.getElementById("view-" + t);
+        const btn = document.getElementById("tab-btn-" + t);
+        if (view) {
+          if (t === tabName) view.classList.remove("hidden");
+          else view.classList.add("hidden");
+        }
+        if (btn) {
+          btn.className = t === tabName
+            ? "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-sky-400 text-slate-950 shadow"
+            : "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700";
+        }
+      });
+      if (tabName === "data") updateSoapNotePreview();
+    }
+
+    function toggleSlpDrawer() {
+      state.slpDrawerOpen = !state.slpDrawerOpen;
+      const drawer = document.getElementById("slp-clinician-drawer");
+      const mainCol = document.getElementById("scene-main-col");
+      const label = document.getElementById("slp-drawer-label");
+      if (state.slpDrawerOpen) {
+        drawer.classList.remove("hidden");
+        mainCol.className = "lg:col-span-8 space-y-4";
+        label.textContent = "SLP Prompts: ON";
+      } else {
+        drawer.classList.add("hidden");
+        mainCol.className = "lg:col-span-12 space-y-4";
+        label.textContent = "SLP Prompts: OFF";
+      }
+    }
+
+    function toggleAacBar() {
+      state.aacBarOpen = !state.aacBarOpen;
+      const bar = document.getElementById("aac-footer-bar");
+      const label = document.getElementById("aac-bar-label");
+      if (state.aacBarOpen) {
+        bar.classList.remove("hidden");
+        label.textContent = "AAC Strip: ON";
+      } else {
+        bar.classList.add("hidden");
+        label.textContent = "AAC Strip: OFF";
+      }
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById("sound-icon").textContent = state.soundEnabled ? "🔊" : "🔇";
+      if (!state.soundEnabled && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      showToast(state.soundEnabled ? "🔊" : "🔇", state.soundEnabled ? "Sound & Voice Enabled" : "Sound Muted");
+    }
+
+    // --- 11. PREPOSITION ANCHOR DECK RENDERER ---
+    function renderPrepositionDeck() {
+      const grid = document.getElementById("preposition-cards-grid");
+      if (!grid) return;
+      grid.innerHTML = PREPOSITION_CARDS.map((c, idx) => `
+        <div class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/70 hover:border-sky-400 transition flex flex-col justify-between gap-3">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-sky-600 text-white">${c.prep}</span>
+              <span class="text-2xl">${c.icon}</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">${c.title}</h3>
+            <p class="text-xs text-slate-600">${c.cue}</p>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+              “${c.example}”
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="speakCardExample(${idx})" class="flex-1 py-1.5 px-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-xs transition">
+              🔊 Hear Card
+            </button>
+            <button onclick="switchMainTab('scene')" class="py-1.5 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition">
+              Try It &rarr;
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function speakCardExample(idx) {
+      const card = PREPOSITION_CARDS[idx];
+      if (!card) return;
+      speakText(`${card.prep}. ${card.example}`);
+      showToast("🃏", `${card.prep}: “${card.example}”`);
+    }
+
+    // --- 12. MULTIMODAL AAC STRIP ---
+    function renderAacTiles() {
+      const grid = document.getElementById("aac-tiles-grid");
+      if (!grid) return;
+      grid.innerHTML = AAC_WORDS.map((item, idx) => `
+        <button onclick="tapAacWord(${idx})" class="aac-tile py-2 px-1 rounded-xl border-b-4 font-extrabold text-[11px] sm:text-xs flex flex-col items-center justify-center shadow-sm ${item.bg}">
+          <span class="text-base sm:text-lg leading-none">${item.emoji}</span>
+          <span class="mt-1 tracking-tight">${item.word}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderAacSentenceStrip() {
+      const strip = document.getElementById("aac-sentence-strip");
+      if (!strip) return;
+      if (state.aacSentence.length === 0) {
+        strip.innerHTML = `<span class="text-xs text-slate-400 italic">💬 Spatial &amp; Core AAC Strip: Tap words below to build &amp; speak a sentence (e.g., PUT + JOVI + UNDER)...</span>`;
+        return;
+      }
+      strip.innerHTML = state.aacSentence.map((item, idx) => `
+        <span onclick="removeAacWord(${idx})" class="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-900 shadow-sm hover:bg-rose-50">
+          <span>${item.emoji}</span>
+          <span>${item.word}</span>
+        </span>
+      `).join("");
+    }
+
+    function tapAacWord(idx) {
+      const item = AAC_WORDS[idx];
+      if (!item) return;
+      if (state.aacSentence.length >= 10) state.aacSentence.shift();
+      state.aacSentence.push(item);
+      renderAacSentenceStrip();
+      speakText(item.word.toLowerCase());
+    }
+
+    function removeAacWord(idx) {
+      state.aacSentence.splice(idx, 1);
+      renderAacSentenceStrip();
+    }
+
+    function speakAacSentence() {
+      if (state.aacSentence.length === 0) {
+        showToast("💬", "Tap words on the AAC bar below first!");
+        return;
+      }
+      const phrase = state.aacSentence.map((w) => w.word).join(" ");
+      speakText(phrase.toLowerCase());
+      showToast("🗣️", `Speaking: “${phrase}”`);
+    }
+
+    function clearAacSentence() {
+      state.aacSentence = [];
+      renderAacSentenceStrip();
+    }
+
+    // --- 13. SESSION DATA & CLIPBOARD HELPERS ---
+    function recordTrial(type) {
+      if (state.trials[type] !== undefined) state.trials[type] += 1;
+      if (type === "independent") {
+        state.bonesEarned += 1;
+        playSoundEffect("success");
+      }
+      updateBoneHeader();
+      updateTrialDisplays();
+      updateSoapNotePreview();
+    }
+
+    function updateTrialDisplays() {
+      const ind = state.trials.independent;
+      const cued = state.trials.cued;
+      const mod = state.trials.modeled;
+      const total = ind + cued + mod;
+      const pct = total > 0 ? Math.round((ind / total) * 100) : 0;
+
+      document.getElementById("count-ind").textContent = String(ind);
+      document.getElementById("count-cued").textContent = String(cued);
+      document.getElementById("count-model").textContent = String(mod);
+      document.getElementById("drawer-accuracy-badge").textContent = `${ind} / ${total} (${pct}%)`;
+
+      document.getElementById("stat-ind").textContent = String(ind);
+      document.getElementById("stat-cued").textContent = String(cued);
+      document.getElementById("stat-model").textContent = String(mod);
+      document.getElementById("stat-pct").textContent = `${pct}%`;
+    }
+
+    function updateSoapNotePreview() {
+      const student = (document.getElementById("input-student-initials").value || "Student").trim();
+      const goal = document.getElementById("select-primary-goal").value;
+      const notes = (document.getElementById("input-clinician-notes").value || "").trim();
+      const ind = state.trials.independent;
+      const cued = state.trials.cued;
+      const mod = state.trials.modeled;
+      const total = ind + cued + mod;
+      const pct = total > 0 ? Math.round((ind / total) * 100) : 0;
+
+      const summary = [
+        `SLP SESSION PROGRESS NOTE — ${student}`,
+        `Activity: "Where is Jovi?" Interactive Preposition & Following Directions Scene`,
+        `Clinical Target: ${student} targeted ${goal}.`,
+        `Performance Data: Total Trials = ${total} | Independent = ${ind} (${pct}%) | Verbal/Visual Cue = ${cued} | Modeled = ${mod}.`,
+        `Contexts & Strategies: Practiced receptive placement and expressive prepositional sentences ("Where is Jovi/Piggy?") using visual scene scaffolds and multimodal spatial core vocabulary.`,
+        notes ? `Clinician Observation: ${notes}` : `Clinician Observation: Demonstrated strong engagement placing Jovi, Piggy, and Snoop across interactive spatial scenes.`
+      ].join("\n");
+
+      const area = document.getElementById("soap-note-textarea");
+      if (area) area.value = summary;
+    }
+
+    function resetSessionData() {
+      state.trials = { independent: 0, cued: 0, modeled: 0 };
+      saveState();
+      updateTrialDisplays();
+      updateSoapNotePreview();
+      showToast("🗑️", "Session trial counts reset to zero.");
+    }
+
+    function copyTextWithFallback(text, successMsg) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast("📋", successMsg);
+          }).catch(() => {
+            fallbackCopy(text, successMsg);
+          });
+        } else {
+          fallbackCopy(text, successMsg);
+        }
+      } catch (e) {
+        fallbackCopy(text, successMsg);
+      }
+    }
+
+    function fallbackCopy(text, successMsg) {
+      const temp = document.createElement("textarea");
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      try {
+        document.execCommand("copy");
+        showToast("📋", successMsg);
+      } catch (err) {
+        showToast("⚠️", "Please select and copy manually.");
+      }
+      document.body.removeChild(temp);
+    }
+
+    function copySoapNote() {
+      copyTextWithFallback(document.getElementById("soap-note-textarea").value, "Copied SLP Progress Note to clipboard!");
+    }
+
+    function copyPrepGuideMarkdown() {
+      copyTextWithFallback(PREP_GUIDE_MD, "Copied SLP Instructor Prep Guide (Markdown)!");
+    }
+
+    function copyReadmeToClipboard() {
+      copyTextWithFallback(README_TEXT, "Copied README.md to clipboard!");
+    }
+
+    function copyVibePrompt(idx) {
+      if (VIBE_PROMPTS[idx]) {
+        copyTextWithFallback(VIBE_PROMPTS[idx], "Copied Vibe-Coding prompt to clipboard!");
+      }
+    }
+
+    // --- 14. INITIALIZE ON WINDOW LOAD ---
+    window.addEventListener("DOMContentLoaded", () => {
+      loadSavedState();
+      updateBoneHeader();
+      renderTokenTray();
+      renderAacTiles();
+      renderAacSentenceStrip();
+      renderPrepositionDeck();
+      generateNewDirection();
+      updateTrialDisplays();
+      updateSoapNotePreview();
+    });
+  </script>
+</body>
+</html>
